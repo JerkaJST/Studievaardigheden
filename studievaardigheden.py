@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, flash, redirect
-from forms import RegistrationForm, LoginForm
+from forms import VragenlijstForm, RegistrationForm, LoginForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
@@ -26,11 +26,24 @@ def home():
     return render_template('home.html', posts=posts)
 
 
+
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
 
 
+@app.route("/vragenlijst", methods=['GET', 'POST'])
+def vragenlijst():
+    form = VragenlijstForm()
+    if form.validate_on_submit():
+        flash(f'Vragenlijst voor {form.user_first_name.data}', 'ontvangen')
+        return redirect(url_for('home'))
+    return render_template('vragenlijst.html', title='Vragenlijst_studievaardigheden', form=form)
+
+
+#===========================================
+# Hieronder is rechtstreeks van voorbeeld
+#===========================================
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
